@@ -35,7 +35,7 @@
         viewBox="0 0 100 100"
         id="dessin">
     <!-- texte qui va être animé de différentes manières -->
-    <text id="titre" x="0" y="0">Bonjour</text>
+    <text id="titre" x="0" y="0">Bonjouj</text>
   </svg>
 
   <!-- panneau de boutons pour animer le titre -->
@@ -102,11 +102,11 @@ function animation2() {
   // mettre en place la situation de départ
   reset()
   gsap.set(titre, {
-    // TODO mettre opacity à 0
+    opacity: 0
   })
   // animer vers la situation finale
   gsap.to(titre, {
-    // TODO mettre opacity à 1
+    opacity: 1, 
     delay: 1,
     duration: 2,
     ease: "power2.in",
@@ -117,11 +117,11 @@ function animation3() {
   // mettre en place la situation de départ
   reset()
   gsap.set(titre, {
-    // TODO mettre fill à red
+    fill: "black"
   })
   // animer vers la situation finale
   gsap.to(titre, {
-    // TODO mettre fill à green
+    fill: "green", 
     duration: 6,
     ease: "none",
   })
@@ -131,11 +131,11 @@ function animation4() {
   // mettre en place la situation de départ
   reset()
   gsap.set(titre, {
-    // TODO mettre le style à 'font: 0px sans-serif;'
+    font: "0px sans-serif"
   })
   // animer vers la situation finale
   gsap.to(titre, {
-    // TODO mettre le style à 'font: 24px sans-serif;'
+    font: "24px sans-serif", 
     duration: 2,
     ease: "power2.in",
   })
@@ -145,11 +145,13 @@ function animation5() {
   // mettre en place la situation de départ
   reset()
   gsap.set(titre, {
-    // TODO initialiser à 'font: 24px sans-serif; letter-spacing: 20px'
+    font: "24px sans-serif", 
+    "letter-spacing": "20px"
   })
   // animer vers la situation finale
   gsap.to(titre, {
-    // TODO animer vers 'font: 24px sans-serif; letter-spacing: 0px'
+    font: "24px sans-serif",
+    "letter-spacing": "0px", 
     duration: 2,
     ease: "power2.out",
   })
