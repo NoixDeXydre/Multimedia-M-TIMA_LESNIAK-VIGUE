@@ -9,7 +9,7 @@
 
   <script type="module">
 
-function PartitionFloue(trapezes) {
+function PartitionFloue(trapezes, transform = null) {
 
     const svg = d3.select("#dessin");
     const width = 600;
@@ -27,12 +27,22 @@ function PartitionFloue(trapezes) {
     const N = trapezes.length;
 
     const fy = d3.scaleLinear()
-    .domain([0, 1])
-    .range([height - margin.bottom, margin.top]);
+      .domain([0, 1])
+      .range([height - margin.bottom, margin.top]);
 
-    const fx = d3.scaleLinear()
-    .domain([trapezes[0].supL - 1, trapezes[N - 1].supH + 1])
-    .range([margin.left, width - margin.right]);
+    let fx = d3.scaleLinear()
+      .domain([trapezes[0].supL - 1, trapezes[N - 1].supH + 1])
+      .range([margin.left, width - margin.right]);
+    if (transform != null) {
+      fx = transform.rescaleX(fx) 
+    } else {
+      
+      const zoom = d3.zoom()
+        .extent([[0, 0], [width, height]])
+        .scaleExtent([0.25, 64])
+        .on("zoom", ({transform}) => PartitionFloue(trapezes, transform))
+      svg.call(zoom)
+    }
 
     svg.attr("width", width).attr("height", height);
 
