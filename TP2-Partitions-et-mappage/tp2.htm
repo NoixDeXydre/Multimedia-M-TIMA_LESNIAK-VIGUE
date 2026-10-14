@@ -1,0 +1,75 @@
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>Dessin SVG avec d3.js</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" id="dessin"></svg>
+
+  <script type="module">
+
+function PartitionFloue(trapezes) {
+
+    const svg = d3.select("#dessin");
+    const width = 600;
+    const height = width / 4;
+
+    const margin = {
+      top: 20,
+      right: 10,
+      bottom: 20,
+      left: 10
+    };
+
+    const test = height - margin.bottom;
+
+    const N = trapezes.length;
+
+    const fy = d3.scaleLinear()
+    .domain([0, 1])
+    .range([height - margin.bottom, margin.top]);
+
+    const fx = d3.scaleLinear()
+    .domain([trapezes[0].supL - 1, trapezes[N - 1].supH + 1])
+    .range([margin.left, width - margin.right]);
+
+    svg.attr("width", width).attr("height", height);
+
+    svg.append("g")
+      .attr("transform", `translate(0,${test})`)
+      .call(d3.axisBottom(fx))
+
+    svg.append("g")
+      .attr("transform", `translate(0,${margin.top})`)
+      .call(d3.axisTop(fx))
+
+    const g = svg.append("g")
+    .selectAll("path")
+    .data(trapezes)
+    .join("path")
+    .attr("d", d => {const a = [[fx(d.supL), fy(0)], [fx(d.corL), fy(1)], [fx(d.corH), fy(1)], [fx(d.supH), fy(0)]];
+     return d3.line()(a)+"Z";});
+
+    console.log("TRAPEZES", trapezes)
+}
+
+const Trapezes = [
+    { id: 0, supL: 5, corL: 11, corH: 14, supH: 18, nom: "froid" },
+    { id: 1, supL: 14, corL: 18, corH: 20, supH: 22, nom: "frais" },
+    { id: 2, supL: 20, corL: 22, corH: 24, supH: 30, nom: "tiède" },
+    { id: 3, supL: 24, corL: 30, corH: 38, supH: 42, nom: "chaud" },
+]
+
+// voir https://stackoverflow.com/a/65056488 (append if not exist)
+d3.selection.prototype.appendIfAbsent = function(selector, type) {
+  const element = this.select(selector)
+  return element.empty() ? this.append(type) : element
+}
+
+PartitionFloue(Trapezes);
+
+// ici, il y aura les scripts d3.js pour créer, modifier et animer l'image SVG (enlever ce commentaire)
+  </script>
+</body>
+</html>
