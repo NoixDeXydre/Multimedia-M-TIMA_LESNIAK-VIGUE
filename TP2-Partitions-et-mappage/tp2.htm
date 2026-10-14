@@ -36,6 +36,14 @@ function PartitionFloue(trapezes) {
 
     svg.attr("width", width).attr("height", height);
 
+    const fColor = d3.scaleOrdinal()
+        .domain(trapezes.map(trp => trp.id))
+        .range(d3.schemeSet2);
+        
+    function couleur(trp) {
+      return fColor(trp.id);
+    }
+
     svg.append("g")
       .attr("transform", `translate(0,${test})`)
       .call(d3.axisBottom(fx))
@@ -45,11 +53,27 @@ function PartitionFloue(trapezes) {
       .call(d3.axisTop(fx))
 
     const g = svg.append("g")
-    .selectAll("path")
-    .data(trapezes)
-    .join("path")
-    .attr("d", d => {const a = [[fx(d.supL), fy(0)], [fx(d.corL), fy(1)], [fx(d.corH), fy(1)], [fx(d.supH), fy(0)]];
-     return d3.line()(a)+"Z";});
+      .selectAll("path")
+      .data(trapezes)
+      .join("path")
+      .attr("d", d => {
+          const a = [
+              [fx(d.supL), fy(0)],
+              [fx(d.corL), fy(1)],
+              [fx(d.corH), fy(1)],
+              [fx(d.supH), fy(0)]
+          ];
+          return d3.line()(a) + "Z";
+      })
+      .attr("stroke", couleur)
+      .attr("stroke-width", 2)
+      .attr("fill", couleur)
+      .attr("fill-opacity", 0.4)
+      
+      // Texte des trapèzes
+      .text(d => d.nom)
+      .attr("x", d => (fx(d.corL) + fx(d.corH)) / 2)
+      .attr("y", fy(0.5));
 
     console.log("TRAPEZES", trapezes)
 }
